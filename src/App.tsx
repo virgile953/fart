@@ -16,19 +16,24 @@ function App() {
   ]
   const premiumFartsList = [
     new Audio("/farts/fart-4-228244.flac"),
+    new Audio("/farts/funny-fart-88611.flac"),
   ]
 
   const [clicks, setClicks] = useState(0);
   const [randomFarts] = useState(randomFartsList);
   const [premiumFarts] = useState(premiumFartsList);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   function playRandomFart(): void {
     const index = Math.floor(Math.random() * randomFarts.length);
+    randomFarts[index].onended = () => setIsPlaying(false);
+    setIsPlaying(true);
     randomFarts[index].play();
   }
-  function playPremiumFart(): void {
-    const index = Math.floor(Math.random() * premiumFarts.length);
-    premiumFarts[index].play();
+  function playPremiumFart(idx: number = 0): void {
+    premiumFarts[idx].onended = () => setIsPlaying(false);
+    setIsPlaying(true);
+    premiumFarts[idx].play();
   }
 
   const actions: action[] = [
@@ -44,20 +49,46 @@ function App() {
 
     },
     {
+      index: 3,
+      message: "you like it huh..?",
+      action: playRandomFart
+    },
+    {
       index: 5,
-      message: "stop...",
+      message: "Well that's awkward..",
+      action: playRandomFart
+    },
+    {
+      index: 6,
+      message: "Well that's awkward..",
+      action: playRandomFart
+    },
+    {
+      index: 8,
+      message: "Big one coming up!",
       action: playRandomFart
     },
     {
       index: 9,
-      message: "Big one",
-      action: playPremiumFart
+      message: "phew",
+      action: () => playPremiumFart(0),
+
     },
     {
       index: 10,
-      message: "you've broken it :-(",
-      action: playRandomFart
-    }
+      message: "Why do you keep clicking?",
+      action: playRandomFart,
+    },
+    {
+      index: 19,
+      message: "That's it tho, only farts here",
+      action: playRandomFart,
+    },
+    {
+      index: 29,
+      message: "Get some help, maybe some fresh air",
+      action: playRandomFart,
+    },
   ].sort((a, b) => b.index - a.index);
   const [action, setAction] = useState(getAction());
   const [message, setMessage] = useState(action.message);
@@ -84,6 +115,7 @@ function App() {
           }}
         >
           {message}
+          {isPlaying ? " 💨" : ""}
         </button>
       </div>
     </div >
