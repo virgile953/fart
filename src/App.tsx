@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 type action = {
@@ -19,7 +19,6 @@ function App() {
   ]
 
   const [clicks, setClicks] = useState(0);
-
   const [randomFarts] = useState(randomFartsList);
   const [premiumFarts] = useState(premiumFartsList);
 
@@ -60,25 +59,34 @@ function App() {
       action: playRandomFart
     }
   ].sort((a, b) => b.index - a.index);
-
+  const [action, setAction] = useState(getAction());
+  const [message, setMessage] = useState(action.message);
   function getAction(): action {
     const messageObject = actions.find(message => message.index <= clicks)
-    return messageObject!;
+    if (!messageObject)
+      return actions[0];
+    return messageObject;
   }
+
+  useEffect(() => {
+    setAction(getAction());
+    setMessage(action.message);
+  }, [clicks])
+
   return (
     <div>
       <div className={`${clicks == 0 ? "hidden" : ""} absolute text-xl top-0 right-0 bg-slate-950 px-3 py-2 rounded-bl-lg text-white`}>{clicks}</div>
       <div className="bg-slate-900 w-screen h-screen flex justify-center items-center">
         <button id="fartButton" className="text-white bg-amber-700 p-2 text-2xl rounded-lg border border-amber-800"
           onClick={() => {
-            getAction().action();
             setClicks(clicks + 1);
+            action.action();
           }}
         >
-          {getAction().message}
+          {message}
         </button>
       </div>
-    </div>
+    </div >
   )
 }
 
