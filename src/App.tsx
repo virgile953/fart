@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 type action = {
@@ -64,58 +64,81 @@ function App() {
       action: playRandomFart
     },
     {
-      index: 8,
+      index: 9,
       message: "Big one coming up!",
       action: playRandomFart
     },
     {
-      index: 9,
+      index: 10,
       message: "phew",
       action: () => playPremiumFart(0),
 
     },
     {
-      index: 10,
+      index: 11,
       message: "Why do you keep clicking?",
       action: playRandomFart,
     },
     {
-      index: 19,
+      index: 20,
       message: "That's it tho, only farts here",
       action: playRandomFart,
     },
     {
-      index: 29,
+      index: 30,
       message: "Get some help, maybe some fresh air",
       action: playRandomFart,
     },
+    {
+      index: 40,
+      message: "I'm feeling a bit dizzy...",
+      action: playRandomFart,
+    },
+    {
+      index: 41,
+      message: "Nevermind",
+      action: playRandomFart,
+    },
+    {
+      index: 42,
+      message: "Stop it, get some help",
+      action: playRandomFart,
+    },
+    {
+      index: 50,
+      message: "Here it comes again",
+      action: () => playPremiumFart(1),
+    },
+    {
+      index: 51,
+      message: "My bad, you should still stop",
+      action: playRandomFart,
+    },
+    {
+      index: 52,
+      message: "There's no point in clicking more",
+      action: playRandomFart,
+    },
   ].sort((a, b) => b.index - a.index);
-  const [action, setAction] = useState(getAction());
-  const [message, setMessage] = useState(action.message);
-  function getAction(): action {
-    const messageObject = actions.find(message => message.index <= clicks)
+  function getAction(idx: number): action {
+    const messageObject = actions.find(message => message.index <= idx);
     if (!messageObject)
-      return actions[0];
+      return actions[1];
     return messageObject;
   }
 
-  useEffect(() => {
-    setAction(getAction());
-    setMessage(action.message);
-  }, [clicks])
 
   return (
     <div>
-      <div className={`${clicks == 0 ? "hidden" : ""} absolute text-xl top-0 right-0 bg-slate-950 px-3 py-2 rounded-bl-lg text-white`}>{clicks}</div>
+      <div className={`${clicks <= 0 ? "hidden" : ""} absolute text-xl top-0 right-0 bg-slate-950 px-3 py-2 rounded-bl-lg text-white`}>{clicks}</div>
       <div className="bg-slate-900 w-screen h-screen flex justify-center items-center">
-        <button id="fartButton" className="text-white bg-amber-700 p-2 text-2xl rounded-lg border border-amber-800"
+        <button id="fartButton" className={`text-white bg-amber-700 p-2 text-2xl rounded-lg border border-amber-800 ${isPlaying ? "tilt-n-move-shaking" : ""}`}
           onClick={() => {
             setClicks(clicks + 1);
-            action.action();
+            getAction(clicks + 1).action();
           }}
         >
-          {message}
-          {isPlaying ? " 💨" : ""}
+          {getAction(clicks).message}
         </button>
       </div>
     </div >

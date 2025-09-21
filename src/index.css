@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+@keyframes tilt-n-move-shaking {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(3px, 3px) rotate(3deg);
+  }
+
+  50% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  75% {
+    transform: translate(-3px, 3px) rotate(-3deg);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+.tilt-n-move-shaking {
+  animation: tilt-n-move-shaking 0.1s infinite;
+  transform-origin: center;
+}
